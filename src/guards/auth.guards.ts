@@ -1,37 +1,34 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Logger } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
+import { Request } from 'express';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class JwtAuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService, private reflector: Reflector) {}
 
-  constructor(private jwtService:JwtService){}
-  canActivate(
-    context: ExecutionContext ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request)
-    
-    if(!token){
-        throw new UnauthorizedException('Invalid Token')
-    }
-    try{
-    const payload = this.jwtService.verify(token)
-    request.userId = payload.userId;
-    }
-    catch(e){
-        Logger.error(e.message)
-        throw new UnauthorizedException('Invalid token');
-    }
-    return true;
- }
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest<Request>();
 
 
- private extractTokenFromHeader(request: Request): string | undefined {
-    const authHeader = request.headers['authorization'];
+    const authHeader = request.headers.authorization;
     if (!authHeader) {
-      return undefined;
+      console.log('No Authorization Header');
+      throw new UnauthorizedException('Missing token');
     }
-    const [type, token] = authHeader.split(' ');
-    return type === 'Bearer' ? token : undefined;
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      console.log('Token is empty or not provided');
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    try {
+      const payload = this.jwtService.verify(token);
+      request['user'] = payload; 
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
   }
 }
