@@ -4,6 +4,7 @@ import { Student, StudentSchema } from './schema/student.schema';
 import { User, UserSchema } from 'src/users/schema/user.schema';
 import { StudentService } from './students.service';
 import { StudentController } from './students.controller';
+import { MulterService } from 'src/file-upload/multer.service';
 
 @Module({
      imports: [
@@ -12,7 +13,7 @@ import { StudentController } from './students.controller';
           { name: User.name, schema: UserSchema },
         ]),
       ],
-  providers: [StudentService],
+  providers: [StudentService,MulterService],
   controllers: [StudentController]
 })
 export class StudentsModule {}

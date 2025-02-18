@@ -20,6 +20,10 @@ export class Student extends Document {
   @ApiProperty({ example: 'A', description: 'Student Grade' })
   @Prop()
   grade: string;
+
+  @ApiProperty({ example: 'uploads/profile-pic.jpg', description: 'Profile picture URL' })
+  @Prop()
+  profilePic: string;
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);

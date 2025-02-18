@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsMongoId } from 'class-validator';
+import { IsNotEmpty, IsString, IsMongoId, IsOptional } from 'class-validator';
 
 export class CreateTeacherDto {
   
@@ -16,4 +16,8 @@ export class CreateTeacherDto {
   @ApiProperty({ example: '10:00 AM - 12:00 PM', description: 'Class schedule' })
   @IsString()
   schedule: string;
+
+  @ApiProperty({ type: 'string', format: 'binary', required: false, description: 'Profile picture file' })
+  @IsOptional()
+  profilePic?: string;
 }
