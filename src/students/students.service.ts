@@ -13,15 +13,17 @@ export class StudentService {
   ) {}
 
   async createStudent(createStudentDto: CreateStudentDto): Promise<Student> {
-    const { userId, regNo, grade, subjects } = createStudentDto;
+    const { userId, regNo, grade, subjects ,profilePic} = createStudentDto;
 
     const user = await this.userModel.findById(userId);
+    console.log(user);
+    
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const student = new this.studentModel({ userId, regNo, grade, subjects });
-    return student.save();
+    const student =new this.studentModel({ userId, regNo, grade, subjects,profilePic});
+    return await student.save();
   }
 
   async getAllStudents(): Promise<Student[]> {

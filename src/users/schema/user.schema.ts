@@ -25,6 +25,7 @@ export class User extends Document {
   @ApiProperty({ example: 'admin', description: 'User role', enum: UserRole })
   @Prop({ type: String, enum: UserRole, })
   role: UserRole;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

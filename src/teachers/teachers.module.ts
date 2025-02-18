@@ -4,6 +4,7 @@ import { Teacher, TeacherSchema } from './schema/teacher.schema';
 import { User, UserSchema, } from 'src/users/schema/user.schema';
 import { TeacherService } from './teachers.service';
 import { TeacherController } from './teachers.controller';
+import { MulterService } from 'src/file-upload/multer.service';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { TeacherController } from './teachers.controller';
     ]),
   ],
   controllers: [TeacherController],
-  providers: [TeacherService],
+  providers: [TeacherService,MulterService],
 })
 export class TeacherModule {}
